@@ -7,6 +7,6 @@ Use the repository and target branch configured by the maintainers. Inspect the
 actual Git remotes before creating branches or pull requests; do not send work
 to microsoft/skill-recorder or assume an upstream release branch exists here.
 
-Preserve LICENSE-UPSTREAM and dependency notices when modifying reused code.
+Preserve third_party/licenses/microsoft-skill-recorder.txt and dependency notices when modifying reused code.
 Include both project and upstream licenses in packaged distributions. Follow
 CONTRIBUTING.md and run validation appropriate to each change.

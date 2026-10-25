@@ -808,6 +808,7 @@ test("licenses-only bundles cannot pass release verification", async () => {
       "COMPLIANCE-README.md",
       "LICENSE",
       "LICENSE-UPSTREAM",
+      "LICENSE-MODEL",
       "NATIVE-COMPONENTS.json",
       "NATIVE-THIRD-PARTY-NOTICES.md",
       "RELINKING.md",
@@ -839,6 +840,12 @@ test("licenses-only bundles cannot pass release verification", async () => {
       }),
       /requires full corresponding sources/,
     );
+    await rm(path.join(root, "LICENSE-MODEL"));
+    await assert.rejects(
+      verifyComplianceDirectory(root, { requireSources: false, requireRemoteMaterials: false }),
+      /missing LICENSE-MODEL/,
+    );
+    await writeFile(path.join(root, "LICENSE-MODEL"), "model notice");
     await rm(path.join(root, "LICENSE-UPSTREAM"));
     await assert.rejects(
       verifyComplianceDirectory(root, { requireSources: false, requireRemoteMaterials: false }),

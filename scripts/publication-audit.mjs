@@ -108,8 +108,8 @@ export function auditPublication(root) {
   }
   for (const notice of [
     "LICENSE",
-    "LICENSE-UPSTREAM",
-    "LICENSE-MODEL",
+    "third_party/licenses/microsoft-skill-recorder.txt",
+    "third_party/licenses/openai-whisper.txt",
     "THIRD-PARTY-NOTICES.md",
   ]) {
     if (!files.includes(notice))

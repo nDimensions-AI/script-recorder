@@ -46,4 +46,4 @@ Live provider qualification tools read credentials from stdin and may incur prov
 
 ## Ship
 
-Inspect packaged files, record SHA-256 checksums, and retain the complete `resources/compliance` bundle in every artifact. Preserve `LICENSE`, `LICENSE-UPSTREAM`, `LICENSE-MODEL` and `THIRD-PARTY-NOTICES.md`. The application is unsigned; code signing and automatic updates require separate setup. Source publication does not establish real rehearsal accuracy. Keep the release-candidate label until the remaining gates in [release qualification](docs/release-qualification.md) have passed.
+Inspect packaged files, record SHA-256 checksums, and retain the complete `resources/compliance` bundle in every artifact. Preserve `LICENSE`, `third_party/licenses/microsoft-skill-recorder.txt`, `third_party/licenses/openai-whisper.txt` and `THIRD-PARTY-NOTICES.md`. The application is unsigned; code signing and automatic updates require separate setup. Source publication does not establish real rehearsal accuracy. Keep the release-candidate label until the remaining gates in [release qualification](docs/release-qualification.md) have passed.

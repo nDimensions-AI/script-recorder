@@ -58,6 +58,7 @@ const requiredComplianceFiles = [
   "COMPLIANCE-README.md",
   "LICENSE",
   "LICENSE-UPSTREAM",
+  "LICENSE-MODEL",
   "LICENSE-INVENTORY.json",
   "NATIVE-COMPONENTS.json",
   "NATIVE-THIRD-PARTY-NOTICES.md",
@@ -859,8 +860,8 @@ export async function prepareCompliance({
 
   await Promise.all([
     copyFile(path.join(rootDir, "LICENSE"), path.join(outputDir, "LICENSE")),
-    copyFile(path.join(rootDir, "LICENSE-UPSTREAM"), path.join(outputDir, "LICENSE-UPSTREAM")),
-    copyFile(path.join(rootDir, "LICENSE-MODEL"), path.join(outputDir, "LICENSE-MODEL")),
+    copyFile(path.join(rootDir, "third_party/licenses/microsoft-skill-recorder.txt"), path.join(outputDir, "LICENSE-UPSTREAM")),
+    copyFile(path.join(rootDir, "third_party/licenses/openai-whisper.txt"), path.join(outputDir, "LICENSE-MODEL")),
     copyFile(
       path.join(rootDir, "THIRD-PARTY-NOTICES.md"),
       path.join(outputDir, "THIRD-PARTY-NOTICES.md"),

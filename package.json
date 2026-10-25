@@ -86,13 +86,12 @@
       "dist-electron/**",
       "package.json",
       "LICENSE",
-      "LICENSE-UPSTREAM",
       "THIRD-PARTY-NOTICES.md",
       "!node_modules/@img/sharp-wasm32/**",
       "!node_modules/@img/sharp-freebsd-wasm32/**",
       "!node_modules/@img/sharp-webcontainers-wasm32/**",
       "!node_modules/@emnapi/runtime/**",
-      "LICENSE-MODEL"
+      "third_party/licenses/**"
     ],
     "extraResources": [
       {
@@ -128,13 +127,12 @@
         "dist-electron/**",
         "package.json",
         "LICENSE",
-        "LICENSE-UPSTREAM",
         "THIRD-PARTY-NOTICES.md",
         "!node_modules/@img/sharp-wasm32/**",
         "!node_modules/@img/sharp-freebsd-wasm32/**",
         "!node_modules/@img/sharp-webcontainers-wasm32/**",
         "!node_modules/@emnapi/runtime/**",
-        "LICENSE-MODEL"
+        "third_party/licenses/**"
       ],
       "target": "nsis",
       "artifactName": "${productName}-${version}-windows-${arch}.${ext}"

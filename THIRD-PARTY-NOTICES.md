@@ -7,7 +7,7 @@ nDimensions.AI and CharanTheAiGuy and licensed under MIT (see [`LICENSE`](./LICE
 
 This project derives from [Microsoft Skill Recorder](https://github.com/microsoft/skill-recorder).
 The original Microsoft copyright and complete MIT license are preserved without
-alteration in [`LICENSE-UPSTREAM`](./LICENSE-UPSTREAM). That notice applies to the
+alteration in [`third_party/licenses/microsoft-skill-recorder.txt`](./third_party/licenses/microsoft-skill-recorder.txt). That notice applies to the
 reused upstream portions and must accompany source and packaged distributions.
 Existing per-file copyright notices remain attached to their respective code.
 The upstream project does not sponsor or support this fork.
@@ -173,6 +173,6 @@ The webinar workflow downloads the quantized Xenova/whisper-small ONNX conversio
 of OpenAI Whisper only when local transcription is requested. Its immutable revision
 and SHA-256 values are recorded in `common/webinar/model-manifest.json`. The model
 is licensed under MIT; the OpenAI copyright and license are retained in
-`LICENSE-MODEL`. Model weights are downloaded separately and are not embedded in
+`third_party/licenses/openai-whisper.txt`. Model weights are downloaded separately and are not embedded in
 the application installer. The pinned model card is
 https://huggingface.co/Xenova/whisper-small/tree/2d67713f236afa48a18992566e7647f6ca848e13.

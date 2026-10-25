@@ -32,6 +32,8 @@ Third-party compliance remains enforced. Microsoft MIT attribution and downloade
 
 ## Final verification
 
-96 retained tests passed. TypeScript, production build, strict install/lockfile policy, zero-vulnerability npm audit and full compliance preparation passed. The rebuilt Windows package passed native architecture and retired-code checks, actual local Whisper inference, encrypted provider setup and portable payload integrity checks. The portable executable is 572,113,115 bytes, compared with 721,498,923 bytes for rc.3; binaries remain outside source control.
+96 retained tests passed. TypeScript, production build, strict install/lockfile policy, zero-vulnerability npm audit and full compliance preparation passed. The rebuilt Windows package passed native architecture and retired-code checks, actual local Whisper inference, encrypted provider setup and portable payload integrity checks. The portable executable is 572,112,964 bytes, compared with 721,498,923 bytes for rc.3; binaries remain outside source control.
 
-The staged source scan found no credentials or retired dependencies. An independent offline secretlint pass scanned 166 source/document parts, including XML inside the Word design documents, with zero findings. Dummy credential fixtures are constructed explicitly in tests rather than stored as full key-shaped literals.
+The staged source scan found no credentials or retired dependencies. An independent offline secretlint pass scanned 167 source/document parts, including XML inside the Word design documents, with zero findings. Dummy credential fixtures are constructed explicitly in tests rather than stored as full key-shaped literals.
+
+The README presentation now includes an original SVG cover, the synthetic evidence-workspace screenshot, workflow and setup guidance. The project MIT license remains at the repository root; the unchanged Microsoft and OpenAI component notices are organized under `third_party/licenses/`. Source publication and package verification require those relocated notices, and the generated compliance bundle preserves its established notice filenames.

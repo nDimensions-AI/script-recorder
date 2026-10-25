@@ -66,7 +66,7 @@ export default async function verifyPackagedCompliance(context) {
   const entries = listPackage(asarPath).map((entry) =>
     entry.replace(/^[\\/]+/, "").replaceAll("\\", "/").toLowerCase(),
   );
-  for (const required of ["license", "license-upstream", "license-model", "third-party-notices.md"]) {
+  for (const required of ["license", "third_party/licenses/microsoft-skill-recorder.txt", "third_party/licenses/openai-whisper.txt", "third-party-notices.md"]) {
     if (!entries.includes(required)) {
       throw new Error(`Packaged ASAR is missing ${required}.`);
     }

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-labelledby="title description">
+  <title id="title">nDimensions.AI Script Recorder</title>
+  <desc id="description">One rehearsal. Your team's script. Record locally, review your evidence, and export an editable Word document.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#071d1b"/><stop offset="1" stop-color="#123f36"/></linearGradient>
+    <linearGradient id="card" x2="0" y2="1"><stop stop-color="#1c5147"/><stop offset="1" stop-color="#163d36"/></linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#bcf9de" stroke-opacity=".045"/></pattern>
+  </defs>
+  <rect width="1280" height="440" rx="20" fill="url(#background)"/>
+  <rect width="1280" height="440" rx="20" fill="url(#grid)"/>
+  <circle cx="1150" cy="52" r="230" fill="#6de7b3" opacity=".035"/>
+  <g font-family="Segoe UI,Arial,sans-serif">
+    <rect x="56" y="44" width="48" height="48" rx="14" fill="#75e8b6"/>
+    <text x="80" y="76" text-anchor="middle" font-size="24" font-weight="700" fill="#0a3027">nD</text>
+    <text x="119" y="65" font-size="20" font-weight="700" fill="#f2fff8">nDimensions.AI</text>
+    <text x="119" y="86" font-size="12" letter-spacing="2.5" fill="#a9cbbd">SCRIPT RECORDER</text>
+    <text x="56" y="184" font-size="56" font-weight="700" letter-spacing="-1.8" fill="#f2fff8">One rehearsal.</text>
+    <text x="56" y="248" font-size="56" font-weight="700" letter-spacing="-1.8" fill="#75e8b6">Your team's script.</text>
+    <text x="59" y="292" font-size="19" fill="#bed4ca">The demo, the narration, the screenshots.</text>
+    <text x="59" y="321" font-size="19" fill="#bed4ca">Together in an editable webinar script.</text>
+    <path d="M59 361H605" stroke="#346052"/>
+    <text x="59" y="392" font-size="12" font-weight="600" letter-spacing="2" fill="#a9cbbd">LOCAL CAPTURE · REVIEWED AI · EDITABLE WORD</text>
+    <g transform="translate(715 50)">
+      <rect width="507" height="102" rx="15" fill="url(#card)" stroke="#437466"/>
+      <circle cx="30" cy="31" r="6" fill="#ff8a7c"/>
+      <text x="48" y="36" font-size="16" font-weight="600" fill="#f2fff8">01 / Record your rehearsal</text>
+      <text x="25" y="74" font-size="13" fill="#bed4ca">Screen + microphone. On your computer.</text>
+      <g stroke="#75e8b6" stroke-width="3" stroke-linecap="round">
+        <path d="M365 62v12m8-21v30m8-36v42m8-30v18m8-22v26m8-38v50m8-33v16m8-25v34m8-41v48m8-31v14m8-18v22m8-26v30"/>
+      </g>
+      <path d="M254 104v19" stroke="#75e8b6" stroke-width="2"/>
+      <rect y="126" width="507" height="102" rx="15" fill="url(#card)" stroke="#437466"/>
+      <rect x="24" y="148" width="14" height="14" rx="3" fill="#75e8b6"/>
+      <path d="m27 155 3 3 5-6" fill="none" stroke="#0a3027" stroke-width="1.8"/>
+      <text x="48" y="162" font-size="16" font-weight="600" fill="#f2fff8">02 / Choose what tells the story</text>
+      <text x="25" y="200" font-size="13" fill="#bed4ca">Inspect, crop, mask, and approve your evidence.</text>
+      <rect x="426" y="177" width="52" height="30" rx="4" fill="#0d2c26" stroke="#75e8b6"/>
+      <path d="m433 199 10-9 9 5 10-12 10 16" fill="none" stroke="#75e8b6" stroke-width="1.5"/>
+      <path d="M254 230v19" stroke="#75e8b6" stroke-width="2"/>
+      <rect y="252" width="507" height="102" rx="15" fill="#e7f6ed"/>
+      <text x="25" y="288" font-size="16" font-weight="700" fill="#164636">03 / Give every presenter their cues</text>
+      <text x="25" y="326" font-size="13" fill="#416b59">Talking points. Screenshots. Handoffs. Word export.</text>
+      <rect x="438" y="271" width="38" height="47" rx="5" fill="#fff" stroke="#b3d3c1"/>
+      <path d="M446 283h21m-21 7h21m-21 7h15m-15 7h18" stroke="#1b7759" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
