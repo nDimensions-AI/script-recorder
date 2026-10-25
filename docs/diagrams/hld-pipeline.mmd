@@ -1,0 +1,12 @@
+flowchart LR
+  A[Captured media] --> B[Inspect coverage]
+  B --> C[Local transcript and frame candidates]
+  C --> D[Redact and approve evidence]
+  D --> E[Extract demonstrated steps]
+  E --> F[Compose script sections]
+  F --> G[Validate evidence references]
+  G --> H[Human review and assignments]
+  H --> I[Approve frozen revision]
+  I --> J[Export Word]
+  G -->|Invalid or missing evidence| D
+  H -->|Targeted correction| D

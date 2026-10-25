@@ -1,0 +1,22 @@
+name: Package Windows x64
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24.19.0
+          cache: npm
+      - run: npm install --global npm@11.17.0
+      - run: npm ci --ignore-scripts=false --dangerously-allow-all-scripts=false --strict-allow-scripts
+      - run: npm run check:lockfile
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run dist:portable:win
+      - run: node scripts/verify-windows-package.mjs x64

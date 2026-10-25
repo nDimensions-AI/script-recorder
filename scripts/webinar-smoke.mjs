@@ -1,0 +1,68 @@
+import { createRequire } from 'node:module';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { tmpdir } from 'node:os';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url);
+const { _electron: electron }=require(process.env.WEBINAR_PLAYWRIGHT ?? 'playwright');
+const root=process.cwd(),userData=mkdtempSync(path.join(tmpdir(),'webinar-smoke-'));
+mkdirSync(path.join(root,'artifacts'),{recursive:true});
+const env={...process.env,WEBINAR_DATA_DIR:userData,WEBINAR_SYNTHETIC_CAPTURE:'1',SKILL_RECORDER_MODELS_DIR:path.join(root,'artifacts','ocr-model-cache')};delete env.ELECTRON_RUN_AS_NODE;
+const app=await electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],env,timeout:60000});
+try{
+  const page=await app.waitForEvent('window',{predicate:p=>p.url().includes('#webinar'),timeout:30000}).catch(async()=>app.windows().find(p=>p.url().includes('#webinar')));
+  assert(page,'Webinar window was not created');await page.waitForSelector('.webinar-app');
+  page.on('console',m=>{if(m.type()==='error')console.log('Renderer:',m.text());});
+  page.on('requestfailed',r=>console.log('Request failed:',r.url().split('/')[0],r.failure()?.errorText));
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const before=await page.evaluate(()=>window.webinar.invoke('project.list',{}));assert.equal(before.ok,true,JSON.stringify(before));
+  await page.getByRole('button',{name:'Create your first webinar'}).click();
+  await page.getByLabel('Title',{exact:true}).fill('Release smoke rehearsal');
+  await page.getByLabel('Audience',{exact:true}).fill('Developers');
+  await page.getByLabel('Learning objective').fill('Verify project persistence and review controls');
+  await page.getByRole('button',{name:'Create webinar',exact:true}).click();
+  await page.getByRole('heading',{name:'Release smoke rehearsal',exact:true}).waitFor({timeout:20000});
+  const snapshot=await page.evaluate(async()=>{const projects=await window.webinar.invoke('project.list',{});return window.webinar.invoke('project.snapshot',{projectId:projects.value[0].id});});
+  assert.equal(snapshot.ok,true);assert.equal(snapshot.value.presenters.length,3);
+  const projectId=snapshot.value.projectId;
+  const invoke=async(method,payload={})=>{const r=await page.evaluate(([m,p])=>window.webinar.invoke(m,p),[method,payload]);assert.equal(r.ok,true,JSON.stringify(r));return r.value;};
+  const sources=await invoke('sources.list');
+  await app.evaluate(({BrowserWindow})=>{
+    const original=BrowserWindow.prototype.loadFile;
+    BrowserWindow.prototype.loadFile=function(file,...args){
+      if(String(file).endsWith('capture.html')){BrowserWindow.prototype.loadFile=original;return Promise.reject(new Error('Synthetic initialization failure'));}
+      return original.call(this,file,...args);
+    };
+  });
+  const failed=await page.evaluate(p=>window.webinar.invoke('record.start',p),{projectId,sourceToken:sources[0].token});
+  assert.equal(failed.ok,false);assert.equal((await invoke('capture.status')).state,'Idle');
+  assert.equal((await invoke('project.snapshot',{projectId})).recordings[0].state,'Incomplete');
+  await invoke('record.start',{projectId,sourceToken:sources[0].token,profile:{width:1280,height:720,fps:10,videoBitsPerSecond:1000000,audioBitsPerSecond:64000,segmentTargetSeconds:5,nativeStills:true}});
+  console.log('Synthetic recording started');
+  await new Promise(r=>setTimeout(r,6500));await invoke('record.marker',{label:'Code change'});await invoke('record.pause');
+  await new Promise(r=>setTimeout(r,500));await invoke('record.resume');await new Promise(r=>setTimeout(r,1500));await invoke('record.stop');
+  const captured=await invoke('project.snapshot',{projectId});captured.recordings=captured.recordings.filter(r=>r.state==='Captured');assert.equal(captured.recordings[0].state,'Captured');assert(captured.evidence.length>0);
+  const timeline=await invoke('source.timeline',{projectId,recordingId:captured.recordings[0].id});assert(timeline.segments.filter(s=>s.track==='screen').length>=3);assert(timeline.intervals.some(i=>i.kind==='pause'&&i.end_us>i.start_us));
+  const frame=captured.evidence[0];const ocr=await invoke('evidence.inspectText',{projectId,evidenceId:frame.id});assert(ocr.wordCount>0);assert(ocr.masks.length>0,'OCR must suggest a mask for the synthetic email');const derivative=await invoke('evidence.derive',{projectId,evidenceId:frame.id,plan:{crop:{x:0,y:0,width:frame.width,height:frame.height},masks:[{x:0,y:0,width:100,height:50}],fill:'#000000',transformVersion:'1'}});assert(derivative.id);
+  const imageUrl=await invoke('asset.url',{projectId,assetId:derivative.assetId});assert.equal(await page.evaluate(url=>fetch(url).then(r=>r.status),imageUrl.url),200);
+  const screen=timeline.segments.find(s=>s.track==='screen'),mediaUrl=await invoke('asset.url',{projectId,assetId:screen.asset_id});
+  assert.equal(await page.evaluate(url=>fetch(url,{headers:{Range:'bytes=0-31'}}).then(r=>r.status),mediaUrl.url),206);
+  await invoke('source.probe',{projectId,recordingId:captured.recordings[0].id,atUs:screen.start_us+500000});
+  await page.getByRole('button',{name:'Play source',exact:true}).last().click();
+  await page.getByRole('heading',{name:'Local source recording'}).waitFor();
+  await page.getByRole('button',{name:'Next segment',exact:true}).click();
+  await page.getByRole('button',{name:'Play source',exact:true}).last().click();
+  await new Promise(r=>setTimeout(r,600));
+  assert(await page.locator('.wb-modal video').evaluate(v=>v.readyState>=2));
+  await page.getByRole('button',{name:'Close source',exact:true}).click();
+  await page.getByRole('button',{name:'2 · Evidence',exact:true}).click();
+  const versions=await app.evaluate(()=>process.versions);
+  const sandbox=await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().find(w=>w.webContents.getURL().includes('#webinar')).webContents.getLastWebPreferences());
+  assert.equal(sandbox.sandbox,true);assert.equal(sandbox.nodeIntegration,false);assert.equal(sandbox.contextIsolation,true);
+  await page.waitForFunction(()=>{const images=[...document.querySelectorAll('.wb-evidence img')];return images.length>0&&images.every(img=>img.complete&&img.naturalWidth>0);});
+  await page.bringToFront();
+  await page.screenshot({path:path.join(root,'artifacts/webinar-smoke.png'),fullPage:true,animations:'disabled',timeout:60000});
+  assert.deepEqual(errors,[]);
+  writeFileSync(path.join(root,'artifacts/webinar-smoke.json'),JSON.stringify({passed:true,versions,sandbox:{sandbox:sandbox.sandbox,nodeIntegration:sandbox.nodeIntegration,contextIsolation:sandbox.contextIsolation},projectId,segments:timeline.segments.length,frames:captured.evidence.length,userData},null,2));
+  console.log('Electron smoke passed:',versions.electron,'SQLite-backed project persisted; sandbox enabled.');
+}finally{await app.close();}

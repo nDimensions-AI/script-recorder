@@ -1,0 +1,160 @@
+{
+  "name": "skill-recorder",
+  "version": "0.8.0-rc.4",
+  "description": "Local rehearsal capture, reviewed AI drafting, and presenter-ready Word scripts by nDimensions.AI.",
+  "author": "nDimensions.AI and CharanTheAiGuy",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "engines": {
+    "node": ">=24.19.0 <25",
+    "npm": ">=11.17.0"
+  },
+  "scripts": {
+    "dev": "node scripts/run-reviewed-electron.mjs dev",
+    "build:vite": "vite build",
+    "build": "tsc --noEmit && npm run build:vite",
+    "check:lockfile": "node scripts/check-lockfile-portability.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-transform-types --no-warnings --import ./evals/register.mjs --test common/sensitive.test.ts electron/crash-guards.test.ts electron/sensitive/*.test.ts electron/webinar/*.test.ts scripts/compliance.test.mjs scripts/publication-audit.test.mjs",
+    "electron:install-reviewed": "node scripts/install-reviewed-electron.mjs",
+    "compliance:licenses": "node scripts/prepare-compliance.mjs --licenses-only",
+    "compliance:prepare": "node scripts/prepare-compliance.mjs",
+    "compliance:review": "node scripts/review-compliance-sources.mjs",
+    "compliance:test": "node --test scripts/compliance.test.mjs",
+    "fix:lockfile-registry": "node scripts/check-lockfile-portability.mjs --fix",
+    "dist": "npm run compliance:prepare && node scripts/assert-generic-dist-platform.mjs && npm run build:vite && electron-builder --publish never",
+    "dist:win:x64": "npm run compliance:prepare && node scripts/assert-native-windows-arch.mjs x64 && npm run build:vite && electron-builder --config.npmRebuild=false --publish never --win nsis --x64",
+    "dist:win:arm64": "npm run compliance:prepare && node scripts/assert-native-windows-arch.mjs arm64 && npm run build:vite && electron-builder --config.npmRebuild=false --publish never --win nsis --arm64",
+    "dist:portable:mac": "npm run compliance:prepare && npm run build:vite && electron-builder --publish never --mac zip",
+    "dist:portable:win": "npm run compliance:prepare && node scripts/assert-native-windows-arch.mjs x64 && npm run build:vite && electron-builder --config.npmRebuild=false --publish never --win portable --x64",
+    "start": "node scripts/run-reviewed-electron.mjs start",
+    "test:webinar": "node --experimental-transform-types --no-warnings --import ./evals/register.mjs --test electron/webinar/*.test.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "4.3.1",
+    "@secretlint/core": "^13.0.4",
+    "@secretlint/secretlint-rule-pattern": "^13.0.4",
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.4",
+    "docx": "9.14.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "sharp": "0.35.5",
+    "tesseract.js": "^7.0.0",
+    "tesseract.js-core": "^7.0.0",
+    "zod": "4.6.7",
+    "adm-zip": "0.6.1"
+  },
+  "devDependencies": {
+    "@electron-internal/extract-zip": "1.0.4",
+    "@electron/asar": "^3.4.1",
+    "@electron/get": "5.0.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "electron": "43.8.3",
+    "electron-builder": "^26.15.6",
+    "typescript": "^7.0.0",
+    "vite": "8.1.6",
+    "vite-plugin-electron": "1.0.4"
+  },
+  "overrides": {
+    "adm-zip": "$adm-zip",
+    "fast-uri": "^3.1.5",
+    "global-agent": "^4.1.3",
+    "sharp": "$sharp",
+    "tar": "^7.5.21"
+  },
+  "allowScripts": {
+    "electron-winstaller": false,
+    "protobufjs": false,
+    "tesseract.js": false,
+    "onnxruntime-node@1.30.0": true
+  },
+  "build": {
+    "appId": "ai.ndimensions.scriptrecorder",
+    "productName": "nDimensions.AI Script Recorder",
+    "directories": {
+      "output": "release"
+    },
+    "electronDist": ".compliance-cache/electron",
+    "afterPack": "scripts/verify-packaged-compliance.mjs",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json",
+      "LICENSE",
+      "LICENSE-UPSTREAM",
+      "THIRD-PARTY-NOTICES.md",
+      "!node_modules/@img/sharp-wasm32/**",
+      "!node_modules/@img/sharp-freebsd-wasm32/**",
+      "!node_modules/@img/sharp-webcontainers-wasm32/**",
+      "!node_modules/@emnapi/runtime/**",
+      "LICENSE-MODEL"
+    ],
+    "extraResources": [
+      {
+        "from": ".compliance",
+        "to": "compliance"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/sharp/**",
+      "node_modules/@img/**",
+      "node_modules/@huggingface/transformers/**",
+      "node_modules/onnxruntime-node/**",
+      "node_modules/tesseract.js/**",
+      "node_modules/tesseract.js-core/**"
+    ],
+    "mac": {
+      "icon": "build/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": "-",
+      "hardenedRuntime": false,
+      "category": "public.app-category.developer-tools",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "nDimensions.AI Script Recorder uses your microphone only while you turn on Narrate during a recording, to transcribe your spoken narration on this computer."
+      }
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "files": [
+        "dist/**",
+        "dist-electron/**",
+        "package.json",
+        "LICENSE",
+        "LICENSE-UPSTREAM",
+        "THIRD-PARTY-NOTICES.md",
+        "!node_modules/@img/sharp-wasm32/**",
+        "!node_modules/@img/sharp-freebsd-wasm32/**",
+        "!node_modules/@img/sharp-webcontainers-wasm32/**",
+        "!node_modules/@emnapi/runtime/**",
+        "LICENSE-MODEL"
+      ],
+      "target": "nsis",
+      "artifactName": "${productName}-${version}-windows-${arch}.${ext}"
+    },
+    "compression": "normal",
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerSidebar": null,
+      "include": "build/installer.nsh"
+    },
+    "copyright": "Copyright (c) 2026 nDimensions.AI and CharanTheAiGuy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nDimensions-AI/script-recorder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nDimensions-AI/script-recorder/issues"
+  },
+  "homepage": "https://github.com/nDimensions-AI/script-recorder#readme"
+}

@@ -1,0 +1,41 @@
+node_modules
+dist
+dist-electron
+release
+.compliance
+.compliance-cache
+.compliance-review
+*.log
+.DS_Store
+
+# Eval run outputs (timestamped result logs)
+evals/results/
+# Opt-in OCR eval's downloaded traineddata cache
+evals/.cache/
+
+# Local qualification fixtures and downloaded model/runtime archives
+artifacts/
+
+# Local credentials, recordings, project stores, and editor state
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.webm
+*.wav
+*.mp4
+*.traineddata
+*.onnx
+*.tmp
+*.bak
+coverage/
+.vscode/
+.idea/

@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant J as Job coordinator
+    participant C as Catalog ledger
+    participant G as Provider gateway
+    participant P as Approved provider
+    participant S as Project store
+    J->>C: Verify generation and reserve budget
+    C-->>J: Prepared request ID
+    J->>G: Request and manifest references
+    G->>G: Verify current policy and evidence hashes
+    G->>C: Persist dispatch intent
+    G->>P: Approved images and text only
+    P-->>G: Structured response and usage
+    G->>C: Settle usage or retain uncertain reservation
+    G->>J: Validated proposed output
+    J->>S: Commit if lease, generation and dependencies match
+    S-->>J: Proposed revision or stale rejection
+    Note over J,S: Arrival never authorizes overwriting the script head

@@ -1,0 +1,23 @@
+flowchart TB
+  subgraph device[User computer]
+    UI[React review editor and controls]
+    C[Electron coordinator and typed IPC]
+    R[Capture host and media writer]
+    W[Local ASR and image workers]
+    DB[(SQLite and immutable media assets)]
+    G[Upload policy and AI adapter]
+    E[Word exporter]
+    UI <--> C
+    C --> R
+    R --> DB
+    C --> W
+    W <--> DB
+    C <--> DB
+    C --> G
+    DB --> G
+    C --> E
+    DB --> E
+  end
+  P[Approved cloud AI provider]
+  G <-->|Selected approved evidence and structured results| P
+  E --> D[Editable DOCX with embedded images]
